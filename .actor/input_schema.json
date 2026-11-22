@@ -25,6 +25,7 @@
     "maxBodaccNotices": {
       "title": "Max BODACC notices per company",
       "type": "integer",
+      "description": "Maximum number of BODACC notices fetched per company (most recent first).",
       "minimum": 1,
       "maximum": 100,
       "default": 100
