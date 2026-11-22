@@ -266,3 +266,42 @@ export function buildReport({ siren, company, rawNotices, now = new Date() }) {
         generatedAt: now.toISOString(),
     };
 }
+
+// ---------- Monitoring mode ----------
+
+export function snapshotOf(report) {
+    const latest = report.bodacc?.latest?.[0];
+    return {
+        status: report.status,
+        riskScore: report.risk?.score ?? 0,
+        riskLevel: report.risk?.level ?? 'LOW',
+        bodaccCount: report.bodacc?.totalNotices ?? 0,
+        latestNoticeDate: latest?.date ?? null,
+        directors: (report.directors ?? []).map((d) => `${d.name}|${d.role}`).sort(),
+        checkedAt: report.generatedAt,
+    };
+}
+
+export function diffSnapshots(prev, curr) {
+    if (!prev) return ['FIRST_CHECK: company added to monitoring'];
+    const changes = [];
+    if (prev.status !== curr.status) changes.push(`STATUS: ${prev.status} → ${curr.status}`);
+    if (prev.riskLevel !== curr.riskLevel) changes.push(`RISK_LEVEL: ${prev.riskLevel} → ${curr.riskLevel}`);
+    else if (prev.riskScore !== curr.riskScore) changes.push(`RISK_SCORE: ${prev.riskScore} → ${curr.riskScore}`);
+    if (curr.bodaccCount > prev.bodaccCount || (curr.latestNoticeDate && curr.latestNoticeDate !== prev.latestNoticeDate)) {
+        changes.push(`NEW_BODACC_NOTICES: ${Math.max(1, curr.bodaccCount - prev.bodaccCount)} (latest ${curr.latestNoticeDate})`);
+    }
+    const before = new Set(prev.directors ?? []);
+    const after = new Set(curr.directors ?? []);
+    const added = [...after].filter((d) => !before.has(d));
+    const removed = [...before].filter((d) => !after.has(d));
+    if (added.length || removed.length) {
+        changes.push(`DIRECTORS: +${added.length} / -${removed.length}`);
+    }
+    return changes;
+}
+
+export function monitorStoreName(name) {
+    const clean = String(name || 'default').toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+    return `fr-dd-monitor-${clean || 'default'}`;
+}
