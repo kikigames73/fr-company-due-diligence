@@ -25,6 +25,17 @@ Existing tools give you *one* raw source. This Actor merges them and does the an
 - **Sales prospecting**: enrich a lead list with size, age, directors and financial health.
 - **AI agents**: one clean JSON object per company, ideal for LLM tools and MCP.
 
+## 🔔 Monitoring mode: get alerted only when something changes
+
+Set `monitorMode: true` and schedule the Actor (e.g. every Monday) on your list of clients or suppliers. The Actor remembers each company and **only outputs companies whose situation changed** since the last run:
+
+- new BODACC notice (receivership, liquidation, modification…)
+- status change (active → closed)
+- risk level or score change
+- directors added or removed
+
+Each output item has a `changes` array explaining what happened. **Unchanged companies are not output and not charged**, so monitoring 1,000 companies every week costs only the alerts you receive (plus the first baseline run). Use `monitorName` to keep several independent lists.
+
 ## Input
 
 ```json
@@ -32,7 +43,9 @@ Existing tools give you *one* raw source. This Actor merges them and does the an
   "sirens": ["552032534", "542 051 180", "55203253400646"],
   "companyNames": ["Doctolib"],
   "includeBodacc": true,
-  "onlyRiskAbove": 0
+  "onlyRiskAbove": 0,
+  "monitorMode": false,
+  "monitorName": "my-suppliers"
 }
 ```
 
