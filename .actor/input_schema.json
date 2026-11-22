@@ -1,0 +1,42 @@
+{
+  "title": "French Company Due Diligence",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "sirens": {
+      "title": "SIREN or SIRET numbers",
+      "type": "array",
+      "description": "List of French SIREN (9 digits) or SIRET (14 digits) numbers. Spaces are ignored.",
+      "editor": "stringList",
+      "prefill": ["552032534", "542051180"]
+    },
+    "companyNames": {
+      "title": "Company names (optional)",
+      "type": "array",
+      "description": "Company names to look up. The best match in the official register is used.",
+      "editor": "stringList"
+    },
+    "includeBodacc": {
+      "title": "Include BODACC legal notices",
+      "type": "boolean",
+      "description": "Fetch insolvency, liquidation, modification and accounts-filing notices from BODACC.",
+      "default": true
+    },
+    "maxBodaccNotices": {
+      "title": "Max BODACC notices per company",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "default": 100
+    },
+    "onlyRiskAbove": {
+      "title": "Only output companies with risk score ≥",
+      "type": "integer",
+      "description": "0 = output everything. Useful for monitoring a portfolio and only getting alerts.",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    }
+  },
+  "required": []
+}
