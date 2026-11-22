@@ -87,3 +87,16 @@ Pay per event: you only pay for **successful company reports**. Companies not fo
 - Data comes from public registers and may lag the official publication by a few days.
 - The risk score is an automated indicator, not financial or legal advice.
 - Personal data of directors is published by the French State as open data. Use it in compliance with GDPR.
+
+---
+
+## 🇫🇷 En français : fiche entreprise et score de risque par SIREN
+
+Obtenez en un appel une **fiche complète sur n'importe quelle entreprise française** à partir de son **SIREN ou SIRET** : identité légale, dirigeants, chiffre d'affaires et résultat, labels (RGE, Qualiopi, ESS…), **annonces BODACC (redressement, liquidation, radiation)** et un **score de risque de 0 à 100 expliqué point par point**.
+
+- **Vérifier un client ou un fournisseur** avant de signer ou de livrer.
+- **Recouvrement** : repérer les procédures collectives avant de relancer une facture.
+- **Surveillance de portefeuille** : activez `monitorMode` et programmez l'Actor chaque semaine ; vous ne recevez (et ne payez) que les entreprises dont la situation a changé.
+- **Prospection** : enrichir une liste de leads (taille, ancienneté, dirigeants, santé financière).
+
+Sources : données ouvertes officielles (API Recherche d'entreprises, BODACC). Sans proxy, sans compte, rapide et fiable. Vous ne payez que les fiches réussies.
