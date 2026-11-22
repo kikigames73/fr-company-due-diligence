@@ -8,7 +8,10 @@
       "type": "array",
       "description": "List of French SIREN (9 digits) or SIRET (14 digits) numbers. Spaces are ignored.",
       "editor": "stringList",
-      "prefill": ["552032534", "542051180"]
+      "prefill": [
+        "552032534",
+        "542051180"
+      ]
     },
     "companyNames": {
       "title": "Company names (optional)",
@@ -37,6 +40,19 @@
       "minimum": 0,
       "maximum": 100,
       "default": 0
+    },
+    "monitorMode": {
+      "title": "Monitoring mode (only changes)",
+      "type": "boolean",
+      "description": "Remember each company between runs and output only companies whose status, risk, directors or BODACC notices changed since the last run. Unchanged companies are not output and not charged. Schedule this Actor weekly on your client/supplier list to get alerts.",
+      "default": false
+    },
+    "monitorName": {
+      "title": "Monitoring list name",
+      "type": "string",
+      "description": "Name of your monitored list (letters, digits, hyphens). Use different names to monitor several independent lists.",
+      "default": "default",
+      "editor": "textfield"
     }
   },
   "required": []
