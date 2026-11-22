@@ -1,0 +1,36 @@
+{
+  "actorSpecification": 1,
+  "name": "fr-company-due-diligence",
+  "title": "French Company Due Diligence & Risk Score (SIREN)",
+  "description": "One clean due-diligence report per French company: legal identity, directors, finances, labels (RGE, Qualiopi…), BODACC legal notices (insolvency, liquidation) and a transparent risk score. Official open data only.",
+  "version": "0.1",
+  "buildTag": "latest",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "transformation": {
+            "fields": ["siren", "name", "status", "createdOn", "nafCode", "headquarters", "risk", "error"]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "siren": { "label": "SIREN", "format": "text" },
+              "name": { "label": "Company", "format": "text" },
+              "status": { "label": "Status", "format": "text" },
+              "createdOn": { "label": "Created", "format": "date" },
+              "nafCode": { "label": "NAF", "format": "text" },
+              "headquarters": { "label": "Headquarters", "format": "object" },
+              "risk": { "label": "Risk", "format": "object" },
+              "error": { "label": "Error", "format": "text" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
