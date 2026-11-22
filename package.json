@@ -1,0 +1,18 @@
+{
+  "name": "fr-company-due-diligence",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "French company due-diligence report & risk score by SIREN (SIRENE + BODACC)",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test test/lib.test.js"
+  },
+  "dependencies": {
+    "apify": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "ISC"
+}
