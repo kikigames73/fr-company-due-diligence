@@ -1,5 +1,8 @@
 import { Actor, log } from 'apify';
-import { normalizeSiren, isValidSiren, fetchSirene, fetchBodacc, buildReport, searchCompanies } from './lib.js';
+import {
+    normalizeSiren, isValidSiren, fetchSirene, fetchBodacc, buildReport, searchCompanies,
+    snapshotOf, diffSnapshots, monitorStoreName,
+} from './lib.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -12,6 +15,8 @@ const {
     includeBodacc = true,
     maxBodaccNotices = 100,
     onlyRiskAbove = 0,
+    monitorMode = false,
+    monitorName = 'default',
 } = input;
 
 const opts = { log: (m) => log.warning(m) };
@@ -43,6 +48,15 @@ if (targets.size === 0) {
 
 log.info(`Building due-diligence reports for ${targets.size} companies...`);
 
+// Monitoring mode: snapshots persisted in a named key-value store in the user's account
+let monitorStore = null;
+let snapshots = {};
+if (monitorMode) {
+    monitorStore = await Actor.openKeyValueStore(monitorStoreName(monitorName));
+    snapshots = (await monitorStore.getValue('snapshots')) ?? {};
+    log.info(`Monitoring mode: ${Object.keys(snapshots).length} companies already tracked in "${monitorStoreName(monitorName)}".`);
+}
+
 let produced = 0;
 for (const siren of targets) {
     try {
@@ -54,6 +68,13 @@ for (const siren of targets) {
         }
         const rawNotices = includeBodacc ? await fetchBodacc(siren, { ...opts, limit: maxBodaccNotices }) : [];
         const report = buildReport({ siren, company, rawNotices });
+        if (monitorMode) {
+            const snap = snapshotOf(report);
+            const changes = diffSnapshots(snapshots[siren], snap);
+            snapshots[siren] = snap;
+            if (changes.length === 0) continue; // unchanged → not output, not charged
+            report.changes = changes;
+        }
         if (report.risk.score < onlyRiskAbove) continue;
 
         await Actor.pushData(report);
@@ -71,5 +92,6 @@ for (const siren of targets) {
     await sleep(150); // stay well under the public API rate limit (7 req/s)
 }
 
+if (monitorStore) await monitorStore.setValue('snapshots', snapshots);
 log.info(`Done. ${produced} reports produced.`);
 await Actor.exit();
